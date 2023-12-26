@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PHP Chatbot with MySQL</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h1>PHP Chatbot with MySQL</h1>
+
+<div id="chat-container">
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+function sendMessage() {
+    var userInput = document.getElementById('user-input').value;
+    document.getElementById('chat-messages').innerHTML += '<p>User: ' + userInput + '</p>';
+    
+    // AJAX request to PHP script
+    $.post('chatbot.php', { user_input: userInput }, function(data) {
+        document.getElementById('chat-messages').innerHTML += '<p>Bot: ' + data + '</p>';
+    });
+    
+    document.getElementById('user-input').value = ''; // Clear input field
+}
+</script>
+
+</body>
+</html>

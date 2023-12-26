@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PHP Chatbot with MySQL</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h1>PHP Chatbot with MySQL</h1>
+
+<div id="chat-container">
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+// Function to handle "Enter" key press event
+document.getElementById('user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') { // Check if the pressed key is "Enter"
+        sendMessage(); // Call the sendMessage function when "Enter" is pressed
+    }
+});
+
+function sendMessage() {
+    var userInput = document.getElementById('user-input').value;
+    
+    // Append user message to chat container
+    document.getElementById('chat-messages').innerHTML += '<p>User: ' + userInput + '</p>';
+    
+    // AJAX request to PHP script
+    $.post('chatbot.php', { user_input: userInput }, function(data) {
+        // Append bot response to chat container
+        document.getElementById('chat-messages').innerHTML += '<p>Bot: ' + data + '</p>';
+    });
+    
+    // Clear input field after sending message
+    document.getElementById('user-input').value = '';
+}
+</script>
+
+</body>
+</html>
