@@ -24,7 +24,28 @@ $stmt->bind_result($botResponse);
 if ($stmt->fetch()) {
     echo $botResponse; // Echo fetched bot response for AJAX response
 } else {
-    echo $defaultBotResponse; // Echo default bot response if no match found
+    // Find a similar word from the database
+    $similarQuery = "SELECT user_message FROM chat_history";
+    $result = $conn->query($similarQuery);
+    $closestMatch = "";
+
+    if ($result->num_rows > 0) {
+        $maxSimilarity = 0;
+
+        while ($row = $result->fetch_assoc()) {
+            similar_text($userInput, $row['user_message'], $percent);
+            if ($percent > $maxSimilarity && $percent < 80) { // Adjust the percentage threshold as needed
+                $maxSimilarity = $percent;
+                $closestMatch = $row['user_message'];
+            }
+        }
+    }
+
+    if (!empty($closestMatch)) {
+        echo "Did you mean " . $closestMatch . "?";
+    } else {
+        echo $defaultBotResponse; // Echo default bot response if no match found
+    }
 }
 
 // Close the prepared statement and database connection
